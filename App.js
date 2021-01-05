@@ -1,5 +1,5 @@
 const Cash = (props) => {
-    const value = (props.cash / props.ratio).toFixed(2);
+    const value = (props.cash / props.ratio * props.price).toFixed(2);
     return (
      <div>{props.title} {props.cash <= 0 ? "" : value} </div>
     )
@@ -55,7 +55,8 @@ class ExchangeCounter extends React.Component {
 
     handleSelect = e => {
         this.setState({
-            product: e.target.value
+            product: e.target.value,
+            amount: ""
         })
     }
 
@@ -66,12 +67,18 @@ class ExchangeCounter extends React.Component {
         else return null
     }
 
+    selectPrice(select) {
+        const price = this.props.prices[select];
+        return price;
+    }
+
     render() {
 
         const {amount, product} = this.state;
+        const price = this.selectPrice(product);
 
         const calculators = this.props.currencies.map(currency => (
-            <Cash key={currency.id} ratio={currency.ratio} title={currency.title} cash={amount} price={2} />
+            <Cash key={currency.id} ratio={currency.ratio} title={currency.title} cash={amount} price={price} />
         ))
         return (
             <div className="app">
